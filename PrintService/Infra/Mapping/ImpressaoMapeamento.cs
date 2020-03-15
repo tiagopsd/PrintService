@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PrintService.Domain;
 using System;
@@ -8,14 +9,15 @@ using System.Text;
 
 namespace PrintService.Infra
 {
-    public class ImpressaoMapeamento : EntityTypeBuilder<Impressao>
+    public class ImpressaoMapeamento : IEntityTypeConfiguration<Impressao>
     {
-        public ImpressaoMapeamento([NotNull] IMutableEntityType entityType) : base(entityType)
+        public void Configure(EntityTypeBuilder<Impressao> builder)
         {
-            HasKey(d => d.Id);
-            Property(d => d.IdObjetoImpressao).IsRequired();
-            Property(d => d.NomeImpressora).HasMaxLength(20).IsRequired();
-            Property(d => d.TipoImpressao).IsRequired();
+            builder.HasKey(d => d.Id);
+            builder.Property(d => d.IdObjetoImpressao).HasColumnType("bigint");
+            builder.Property(d => d.NomeImpressora).HasColumnType("varchar").HasMaxLength(20);
+            builder.Property(d => d.TipoImpressao).HasColumnType("smallint");
+            builder.Property(d => d.SituacaoImpressao).HasColumnType("smallint");
         }
     }
 }

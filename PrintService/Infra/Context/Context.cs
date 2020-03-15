@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using PrintService.Domain;
 using PrintService.Domain.Interface;
+using PrintService.Infra.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,7 +26,17 @@ namespace PrintService.Infra
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Impressao>();
+            modelBuilder.ApplyConfiguration(new ImpressaoMapeamento());
+            modelBuilder.ApplyConfiguration(new CashGameMapeamento());
+            modelBuilder.ApplyConfiguration(new ClienteMapeamento());
+            modelBuilder.ApplyConfiguration(new PagamentoMapeamento());
+            modelBuilder.ApplyConfiguration(new ParcelamentoPagamentoMapeamento());
+            modelBuilder.ApplyConfiguration(new PreVendaMapeamento());
+            modelBuilder.ApplyConfiguration(new ProdutoMapeamento());
+            modelBuilder.ApplyConfiguration(new TorneioMapeamento());
+            modelBuilder.ApplyConfiguration(new TorneioClienteMapeamento());
+            modelBuilder.ApplyConfiguration(new UsuarioMapeamento());
+            modelBuilder.ApplyConfiguration(new VendaMapeamento());
         }
     }
 }

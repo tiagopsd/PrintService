@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PrintService.Domain
+namespace PrintService.Domain.Enum
 {
     public enum TipoImpressao : short
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrintService.Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,5 +11,6 @@ namespace PrintService.Domain
         public string NomeImpressora { get; set; }
         public TipoImpressao TipoImpressao { get; set; }
         public long IdObjetoImpressao { get; set; }
+        public SituacaoImpressao SituacaoImpressao { get; set; }
     }
 }

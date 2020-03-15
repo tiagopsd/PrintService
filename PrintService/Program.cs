@@ -28,9 +28,15 @@ namespace PrintService
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
+                    services.AddTransient<IComprovanteAplicacao, ComprovanteAplicacao>();
                     services.AddTransient<IImpressaoAplicacao, ImpressaoAplicacao>();
+                    services.AddTransient<IPagamentoAplicacao, PagamentoAplicacao>();
+                    services.AddTransient<IRingGameAplicacao, RingGameAplicacao>();
+                    services.AddTransient<ITorneioAplicacao, TorneioAplicacao>();
+                    services.AddTransient<IBarAplicacao, BarAplicacao>();
+                    services.AddTransient<IRepository, Repository>();
                     services.AddEntityFrameworkSqlServer()
-                    .AddDbContext<IContext, Context>(ServiceLifetime.Singleton);
+                    .AddDbContext<IContext, Context>(ServiceLifetime.Transient);
                 });
     }
 }

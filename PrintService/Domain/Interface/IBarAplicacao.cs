@@ -4,8 +4,8 @@ using System.Text;
 
 namespace PrintService.Domain.Interface
 {
-    public interface IImpressaoAplicacao
+    public interface IBarAplicacao : IImpressaoBase
     {
-        void Processar();
+
     }
 }

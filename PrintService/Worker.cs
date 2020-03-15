@@ -25,8 +25,9 @@ namespace PrintService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                _impressaoAplicacao.Imprimir();
+                _impressaoAplicacao.Processar();
                 await Task.Delay(1000, stoppingToken);
             }
         }
