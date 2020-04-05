@@ -116,7 +116,6 @@ namespace PrintService.Infra.Impressora
             {
                 foreach (var torneio in comprovanteModel.TorneiosCliente)
                 {
-
                     ev.Graphics.DrawString($"{ torneio.Torneio.Nome} - Data: {torneio.DataCadastro.ToShortDateString()}", spaceFonte, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                     size = ev.Graphics.MeasureString("X", spaceFonte);
                     currentUsedHeight += size.Height;
