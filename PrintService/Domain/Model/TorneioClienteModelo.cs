@@ -6,5 +6,6 @@ namespace PrintService.Domain.Model
 {
     public class TorneioClienteModelo
     {
+        public object Torneio { get; internal set; }
     }
 }
