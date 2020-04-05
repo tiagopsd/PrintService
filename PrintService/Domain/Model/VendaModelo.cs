@@ -7,7 +7,7 @@ namespace PrintService.Domain.Model
     public class VendaModelo
     {
         public List<PreVendaModelo> PreVendas { get; internal set; }
-        public object DataVenda { get; internal set; }
+        public DateTime DataVenda { get; internal set; }
         public decimal Valor { get; internal set; }
     }
 }

@@ -10,5 +10,6 @@ namespace PrintService.Domain.Model
         public DateTime DataPagamento { get; set; }
         public List<CashGameModelo> CashGames { get; set; }
         public List<VendaModelo> Vendas { get; set; }
+        public List<TorneioClienteModelo> TorneiosCliente { get; set; }
     }
 }

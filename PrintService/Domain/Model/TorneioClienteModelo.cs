@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PrintService.Domain.Model
 {
-    class TorneioClienteModelo
+    public class TorneioClienteModelo
     {
     }
 }
