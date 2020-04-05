@@ -10,5 +10,6 @@ namespace PrintService.Infra.Utils
         {
             return !string.IsNullOrEmpty(valor);
         }
+
     }
 }
