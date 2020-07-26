@@ -1,8 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using PrintService.Domain;
+using PrintService.Domain.Enitity;
 using PrintService.Domain.Enum;
 using PrintService.Domain.Interface;
+using PrintService.Domain.Model;
 using PrintService.Infra;
+using PrintService.Infra.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,50 +16,54 @@ using System.Text;
 
 namespace PrintService.Aplication
 {
-    public class ImpressaoAplicacao : IImpressaoAplicacao
+    public class ImpressaoAplicacao : AplicacaoBase, IImpressaoAplicacao
     {
-        private IRepository _repository;
-        private IBarAplicacao _barAplicacao;
-        private IRingGameAplicacao _ringGameAplicacao;
-        private ITorneioAplicacao _torneioAplicacao;
-        private IPagamentoAplicacao _pagamentoAplicacao;
-        private IComprovanteAplicacao _comprovanteAplicacao;
-
-        public ImpressaoAplicacao(IRepository repository, IBarAplicacao barAplicacao, IRingGameAplicacao ringGameAplicacao,
-            ITorneioAplicacao torneioAplicacao, IPagamentoAplicacao pagamentoAplicacao, IComprovanteAplicacao comprovanteAplicacao)
+        public ImpressaoAplicacao(
+            IRepository repository,
+            IEnumerable<IImpressao> impressoes,
+            IContext context,
+            ILogger<Worker> logger)
+            : base(repository, impressoes, context, logger)
         {
-            _repository = repository;
-            _barAplicacao = barAplicacao;
-            _ringGameAplicacao = ringGameAplicacao;
-            _torneioAplicacao = torneioAplicacao;
-            _pagamentoAplicacao = pagamentoAplicacao;
-            _comprovanteAplicacao = comprovanteAplicacao;
         }
 
         public void Processar()
         {
             var impressoes = ObterImpressaoPendente();
-            impressoes.ForEach(d => RealizaImpressao(d.TipoImpressao, d));
+
+            impressoes.ForEach(d =>
+            {
+                RealizaImpressao(d);
+            });
         }
 
-        public void RealizaImpressao(TipoImpressao tipoImpressao, Impressao impressao)
+        public void RealizaImpressao(Impressao impressao)
         {
-            switch (tipoImpressao)
+            switch (impressao.TipoImpressao)
             {
-                case TipoImpressao.Bar:
-                    _barAplicacao.Imprimir(impressao);
+                case TipoImpressao.Venda:
+                    {
+                        var modeloImpressao = _repository.GetById<Venda>(impressao.IdObjetoImpressao).ConverteModeloImpressao();
+                        Imprimir(impressao, ImplementacaoImpressao.ImpressaoVenda, modeloImpressao);
+                    }
                     break;
-                case TipoImpressao.RingGame:
-                    _ringGameAplicacao.Imprimir(impressao);
+                case TipoImpressao.CashGame:
+                    {
+                        var modeloImpressao = _repository.GetById<CashGame>(impressao.IdObjetoImpressao).ConverteModeloImpressao();
+                        Imprimir(impressao, ImplementacaoImpressao.ImpressaoCashGame, modeloImpressao);
+                    }
                     break;
-                case TipoImpressao.Torneio:
-                    _torneioAplicacao.Imprimir(impressao);
-                    break;
-                case TipoImpressao.Pagamento:
-                    _pagamentoAplicacao.Imprimir(impressao);
+                case TipoImpressao.TorneioCliente:
+                    {
+                        var modeloImpressao = _repository.GetById<TorneioCliente>(impressao.IdObjetoImpressao).ConverteModeloImpressao();
+                        Imprimir(impressao, ImplementacaoImpressao.ImpressaoTorneioCliente, modeloImpressao);
+                    }
                     break;
                 case TipoImpressao.Comprovante:
-                    _comprovanteAplicacao.Imprimir(impressao);
+                    {
+                        var modeloImpressao = _repository.GetById<Pagamento>(impressao.IdObjetoImpressao).ConverteModeloImpressao();
+                        Imprimir(impressao, ImplementacaoImpressao.ImpressaoComprovante, modeloImpressao);
+                    }
                     break;
             }
         }
@@ -61,6 +71,15 @@ namespace PrintService.Aplication
         private List<Impressao> ObterImpressaoPendente()
         {
             return _repository.ToList<Impressao>(d => d.SituacaoImpressao != SituacaoImpressao.Impresso);
+        }
+
+        private void Imprimir(Impressao impressao, ImplementacaoImpressao implementacao, IModeloImpressao modeloImpressao)
+        {
+            _logger.LogInformation($"Realizando impressão {impressao.TipoImpressao}");
+            _impressoes.ElementAt(implementacao.Valor()).Imprimir(modeloImpressao, impressao.NomeImpressora);
+            _logger.LogInformation($"Impressão {impressao.TipoImpressao} realizada com sucesso!");
+            impressao.SituacaoImpressao = SituacaoImpressao.Impresso;
+            _context.SaveChanges();
         }
     }
 }

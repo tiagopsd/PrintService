@@ -14,10 +14,8 @@ namespace PrintService.Infra.Mapping
             builder.ToTable("PreVenda", "dbo");
             builder.HasKey(d => d.Id);
             builder.Property(d => d.Quantidade).HasColumnType("smallint").IsRequired();
-            builder.Property(d => d.DataHora).HasColumnType("datetime2").IsRequired();
             builder.HasOne(d => d.Produto).WithMany().HasForeignKey(d => d.IdProduto);
             builder.HasOne(d => d.Venda).WithMany(d => d.PreVendas).HasForeignKey(d => d.IdVenda);
-            builder.HasOne(d => d.Usuario).WithMany().HasForeignKey(d => d.IdUsuario);
         }
     }
 }

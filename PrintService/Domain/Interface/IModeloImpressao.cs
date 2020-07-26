@@ -4,8 +4,7 @@ using System.Text;
 
 namespace PrintService.Domain.Interface
 {
-    public interface ITorneioAplicacao : IImpressaoBase
+    public interface IModeloImpressao
     {
-
     }
 }

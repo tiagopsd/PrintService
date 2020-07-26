@@ -4,8 +4,8 @@ using System.Text;
 
 namespace PrintService.Domain.Interface
 {
-    public interface IRingGameAplicacao : IImpressaoBase
+    public interface IImpressao
     {
-
+        void Imprimir(IModeloImpressao modeloImpressao, string impressora); 
     }
 }

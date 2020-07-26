@@ -13,6 +13,7 @@ namespace PrintService.Infra
     {
         public void Configure(EntityTypeBuilder<Impressao> builder)
         {
+            builder.ToTable("Impressao", "dbo");
             builder.HasKey(d => d.Id);
             builder.Property(d => d.IdObjetoImpressao).HasColumnType("bigint");
             builder.Property(d => d.NomeImpressora).HasColumnType("varchar").HasMaxLength(20);

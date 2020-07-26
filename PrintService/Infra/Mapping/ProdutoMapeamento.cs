@@ -15,10 +15,6 @@ namespace PrintService.Infra.Mapping
             builder.HasKey(d => d.Id);
             builder.Property(d => d.Nome).HasColumnType("varchar").HasMaxLength(40).IsRequired();
             builder.Property(d => d.Valor).HasColumnType("float").IsRequired();
-            builder.Property(d => d.ValorCompra).HasColumnType("float").IsRequired();
-            builder.Property(d => d.QtdEstoque).HasColumnType("smallint").IsRequired();
-            builder.Property(d => d.DataCadastro).HasColumnType("datetime2").IsRequired();
-            builder.Property(d => d.DataAlteracao).HasColumnType("datetime2");
         }
     }
 }

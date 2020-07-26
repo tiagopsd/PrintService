@@ -1,4 +1,7 @@
-﻿using PrintService.Domain.Model;
+﻿using Microsoft.Extensions.Logging;
+using PrintService.Domain.Interface;
+using PrintService.Domain.Model;
+using PrintService.Infra.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,29 +14,38 @@ namespace PrintService.Infra.Impressora
     public class ImpressaoComprovante : ImpressaoBase
     {
         private ComprovanteModelo comprovanteModel;
-        public void Imprime(ComprovanteModelo comprovanteModel, string nomeImpressora)
+
+        public ImpressaoComprovante(ILogger<Worker> logger) : base(logger)
+        {
+        }
+
+        public override void Imprimir(IModeloImpressao comprovanteModel, string nomeImpressora)
         {
             try
             {
-                this.comprovanteModel = comprovanteModel;
+                this.comprovanteModel = (ComprovanteModelo)comprovanteModel;
                 ImprimeUmaVez(EventoEpson, nomeImpressora);
             }
-            catch
+            catch (Exception erro)
             {
+                _logger.LogError($"Erro ao realizar impressão do Comprovante! " +
+                    $"Impressora: {nomeImpressora}" +
+                    $"StackTrace: {erro.GetBaseException().StackTrace} " +
+                    $"erro: {erro.GetBaseException().Message}");
             }
         }
 
         private void EventoEpson(object sender, PrintPageEventArgs ev)
         {
-            System.Drawing.Font titleFont = new System.Drawing.Font("Segoe UI", 22f, FontStyle.Bold);
-            System.Drawing.Font spaceTitleFonte = new System.Drawing.Font("Segoe UI", 25f, FontStyle.Bold);
-            System.Drawing.Font spaceFonte = new System.Drawing.Font("Segoe UI", 10f, FontStyle.Bold);
-            System.Drawing.Font spaceDataHoraFonte = new System.Drawing.Font("Segoe UI", 18f, FontStyle.Bold);
-            System.Drawing.Font TorneioFonte = new System.Drawing.Font("Segoe UI", 16f, FontStyle.Bold);
+            Font titleFont = new Font("Segoe UI", 22f, FontStyle.Bold);
+            Font spaceTitleFonte = new Font("Segoe UI", 25f, FontStyle.Bold);
+            Font spaceFonte = new Font("Segoe UI", 10f, FontStyle.Bold);
+            Font spaceDataHoraFonte = new Font("Segoe UI", 18f, FontStyle.Bold);
+            Font TorneioFonte = new Font("Segoe UI", 16f, FontStyle.Bold);
 
 
-            System.Drawing.Font pdvFont = new System.Drawing.Font("Segoe UI", 14f, FontStyle.Regular);
-            System.Drawing.Font obsFont = new System.Drawing.Font("Segoe UI", 7f, FontStyle.Regular);
+            Font pdvFont = new Font("Segoe UI", 14f, FontStyle.Regular);
+            Font obsFont = new Font("Segoe UI", 7f, FontStyle.Regular);
 
             SizeF size = new SizeF();
             float currentUsedHeight = 10f;
@@ -42,15 +54,15 @@ namespace PrintService.Infra.Impressora
             size = ev.Graphics.MeasureString("X", spaceTitleFonte);
             currentUsedHeight += size.Height;
 
-            ev.Graphics.DrawString($"Cliente: {comprovanteModel.NomeCliente}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
+            ev.Graphics.DrawString($"Cliente: {comprovanteModel.Cliente.Nome}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
             size = ev.Graphics.MeasureString("X", spaceFonte);
             currentUsedHeight += size.Height;
 
-            ev.Graphics.DrawString($"Data: {comprovanteModel.DataPagamento.ToShortDateString()}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
+            ev.Graphics.DrawString($"Data: {comprovanteModel.Pagamento.Data.ToShortDateString()}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
             size = ev.Graphics.MeasureString("X", spaceFonte);
             currentUsedHeight += size.Height;
 
-            ev.Graphics.DrawString($"Hora: {comprovanteModel.DataPagamento.ToShortTimeString()}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
+            ev.Graphics.DrawString($"Hora: {comprovanteModel.Pagamento.Data.ToShortTimeString()}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
             size = ev.Graphics.MeasureString("X", spaceDataHoraFonte);
             currentUsedHeight += size.Height;
 
@@ -70,12 +82,12 @@ namespace PrintService.Infra.Impressora
                     size = ev.Graphics.MeasureString("X", spaceFonte);
                     currentUsedHeight += size.Height;
 
-                    ev.Graphics.DrawString($"Valor: {cash.Valor.ToString("c2")}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                    ev.Graphics.DrawString($"Valor: {cash.Valor:c2}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                     size = ev.Graphics.MeasureString("X", spaceFonte);
                     currentUsedHeight += size.Height;
                 }
 
-                ev.Graphics.DrawString($"Total: {comprovanteModel.CashGames.Sum(d => d.Valor).ToString("c2")}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                ev.Graphics.DrawString($"Total: {comprovanteModel.CashGames.Sum(d => d.Valor):c2}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                 size = ev.Graphics.MeasureString("X", spaceDataHoraFonte);
                 currentUsedHeight += size.Height;
 
@@ -95,18 +107,18 @@ namespace PrintService.Infra.Impressora
 
                     foreach (var preVenda in venda.PreVendas)
                     {
-                        ev.Graphics.DrawString($"{preVenda.NomeProduto}: {preVenda.ValorProduto.ToString("c2")} QTD: {preVenda.Quantidade}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                        ev.Graphics.DrawString($"{preVenda.Produto.Nome}: {preVenda.Produto.Valor:c2} QTD: {preVenda.Quantidade}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                         size = ev.Graphics.MeasureString("X", spaceFonte);
                         currentUsedHeight += size.Height;
                     }
 
-                    ev.Graphics.DrawString($"Total Venda: {venda.Valor.ToString("c2")}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                    ev.Graphics.DrawString($"Total Venda: {venda.Valor:c2}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                     size = ev.Graphics.MeasureString("X", spaceDataHoraFonte);
                     currentUsedHeight += size.Height;
                 }
                 if (comprovanteModel.Vendas.Count() > 1)
                 {
-                    ev.Graphics.DrawString($"Total Venda: {comprovanteModel.Vendas.Sum(d => d.Valor).ToString("c2")}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                    ev.Graphics.DrawString($"Total Venda: {comprovanteModel.Vendas.Sum(d => d.Valor):c2}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                     size = ev.Graphics.MeasureString("X", spaceDataHoraFonte);
                     currentUsedHeight += size.Height;
                 }
@@ -114,76 +126,76 @@ namespace PrintService.Infra.Impressora
 
             if (comprovanteModel.TorneiosCliente.Count() > 0)
             {
-                foreach (var torneio in comprovanteModel.TorneiosCliente)
+                foreach (var torneioCliente in comprovanteModel.TorneiosCliente)
                 {
-                    ev.Graphics.DrawString($"{ torneio.Torneio.Nome} - Data: {torneio.DataCadastro.ToShortDateString()}", spaceFonte, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                    ev.Graphics.DrawString($"{ torneioCliente.Torneio.Nome} - Data: {torneioCliente.DataCadastro.ToShortDateString()}", spaceFonte, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                     size = ev.Graphics.MeasureString("X", spaceFonte);
                     currentUsedHeight += size.Height;
 
-                    if (torneio.BuyDouble.HasValue && torneio.BuyDouble > 0)
+                    if (torneioCliente.BuyDouble > 0)
                     {
-                        ev.Graphics.DrawString($"Buy-Double: {torneio.Torneio.BuyDouble.Value.ToString("c2")} QTD: {torneio.BuyDouble}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                        ev.Graphics.DrawString($"Buy-Double: {torneioCliente.Torneio.BuyDouble:c2} QTD: {torneioCliente.BuyDouble}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                         size = ev.Graphics.MeasureString("X", spaceFonte);
                         currentUsedHeight += size.Height;
                     }
 
-                    else if (torneio.BuyIn.HasValue && torneio.BuyIn > 0)
+                    else if (torneioCliente.BuyIn > 0)
                     {
-                        ev.Graphics.DrawString($"Buy-In: {torneio.Torneio.BuyIn.Value.ToString("c2")} QTD: {torneio.BuyIn}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                        ev.Graphics.DrawString($"Buy-In: {torneioCliente.Torneio.BuyIn:c2} QTD: {torneioCliente.BuyIn}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                         size = ev.Graphics.MeasureString("X", spaceFonte);
                         currentUsedHeight += size.Height;
                     }
 
-                    if (torneio.ReBuy.HasValue && torneio.ReBuy > 0)
+                    if (torneioCliente.ReBuy > 0)
                     {
-                        ev.Graphics.DrawString($"Re-Buy: {torneio.Torneio.ReBuy.Value.ToString("c2")} QTD: {torneio.ReBuy}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                        ev.Graphics.DrawString($"Re-Buy: {torneioCliente.Torneio.ReBuy:c2} QTD: {torneioCliente.ReBuy}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                         size = ev.Graphics.MeasureString("X", spaceFonte);
                         currentUsedHeight += size.Height;
                     }
 
-                    if (torneio.Addon.HasValue && torneio.Addon > 0)
+                    if (torneioCliente.Addon > 0)
                     {
-                        ev.Graphics.DrawString($"Addon: {torneio.Torneio.Addon.Value.ToString("c2")} QTD: {torneio.Addon}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                        ev.Graphics.DrawString($"Addon: {torneioCliente.Torneio.Addon:c2} QTD: {torneioCliente.Addon}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                         size = ev.Graphics.MeasureString("X", spaceFonte);
                         currentUsedHeight += size.Height;
                     }
 
-                    if (torneio.JackPot.HasValue && torneio.JackPot > 0)
+                    if (torneioCliente.JackPot > 0)
                     {
-                        ev.Graphics.DrawString($"JackPot: {torneio.Torneio.JackPot.Value.ToString("c2")} QTD: {torneio.JackPot}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                        ev.Graphics.DrawString($"JackPot: {torneioCliente.Torneio.JackPot:c2} QTD: {torneioCliente.JackPot}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                         size = ev.Graphics.MeasureString("X", spaceFonte);
                         currentUsedHeight += size.Height;
                     }
 
-                    if (torneio.TaxaAdm.HasValue && torneio.TaxaAdm > 0)
+                    if (torneioCliente.TaxaAdm > 0)
                     {
-                        ev.Graphics.DrawString($"Taxa Adm: {torneio.Torneio.TaxaAdm.Value.ToString("c2")} QTD: {torneio.TaxaAdm}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                        ev.Graphics.DrawString($"Taxa Adm: {torneioCliente.Torneio.TaxaAdm:c2} QTD: {torneioCliente.TaxaAdm}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                         size = ev.Graphics.MeasureString("X", spaceFonte);
                         currentUsedHeight += size.Height;
                     }
 
-                    if (torneio.BonusBeneficente.TemValor())
+                    if (torneioCliente.BonusBeneficente.TemValor())
                     {
-                        var bonusFormato = torneio.BonusBeneficente.Contains("5") ? "R$ " + torneio.BonusBeneficente : "Alimento";
+                        var bonusFormato = torneioCliente.BonusBeneficente.Contains("5") ? "R$ " + torneioCliente.BonusBeneficente : "Alimento";
                         ev.Graphics.DrawString($"Bônus Beneficente: {bonusFormato}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                         size = ev.Graphics.MeasureString("X", spaceFonte);
                         currentUsedHeight += size.Height;
                     }
 
-                    if (torneio.Jantar.HasValue && torneio.Jantar > 0)
+                    if (torneioCliente.Jantar > 0)
                     {
-                        ev.Graphics.DrawString($"Jantar: {torneio.Torneio.Jantar.Value.ToString("c2")} QTD: {torneio.Jantar}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                        ev.Graphics.DrawString($"Jantar: {torneioCliente.Torneio.Jantar:c2} QTD: {torneioCliente.Jantar}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                         size = ev.Graphics.MeasureString("X", spaceFonte);
                         currentUsedHeight += size.Height;
                     }
 
-                    ev.Graphics.DrawString($"Total: {torneio.ValorTotal.ToString("c2")}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                    ev.Graphics.DrawString($"Total: {torneioCliente.ValorTotal:c2}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                     size = ev.Graphics.MeasureString("X", spaceDataHoraFonte);
                     currentUsedHeight += size.Height;
                 }
             }
 
-            if (comprovanteModel.ParcelamentoPagamentos.Count() > 0)
+            if (comprovanteModel.ParcelamentoPagamentos.Any())
             {
                 ev.Graphics.DrawString($"Parcelamento", spaceFonte, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                 size = ev.Graphics.MeasureString("X", spaceFonte);
@@ -195,18 +207,18 @@ namespace PrintService.Infra.Impressora
                     size = ev.Graphics.MeasureString("X", spaceFonte);
                     currentUsedHeight += size.Height;
 
-                    ev.Graphics.DrawString($"Valor parcela: {parcela.ValorPago.ToString("c2")}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                    ev.Graphics.DrawString($"Valor parcela: {parcela.ValorPago:c2}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                     size = ev.Graphics.MeasureString("X", spaceFonte);
                     currentUsedHeight += size.Height;
 
-                    ev.Graphics.DrawString($"Finalizador: {parcela.TipoFinalizador.ToString()}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+                    ev.Graphics.DrawString($"Finalizador: {parcela.TipoFinalizador}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
                     size = ev.Graphics.MeasureString("X", spaceDataHoraFonte);
                     currentUsedHeight += size.Height;
                 }
             }
 
 
-            ev.Graphics.DrawString($"Total Pago: {comprovanteModel.Pagamento.ValorTotal.ToString("c2")}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+            ev.Graphics.DrawString($"Total Pago: {comprovanteModel.Pagamento.ValorTotal:c2}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
             size = ev.Graphics.MeasureString("X", spaceFonte);
             currentUsedHeight += size.Height;
         }

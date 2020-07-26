@@ -1,10 +1,11 @@
-﻿using System;
+﻿using PrintService.Domain.Interface;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace PrintService.Domain.Enitity
 {
-    public class Torneio
+    public class Torneio : IEntidade
     {
         public int Id { get; set; }
         public string Nome { get; set; }
@@ -14,12 +15,6 @@ namespace PrintService.Domain.Enitity
         public double? Jantar { get; set; }
         public double? JackPot { get; set; }
         public double? TaxaAdm { get; set; }
-        public DateTime DataCadastro { get; set; }
-        public DateTime? DataAlteracao { get; set; }
-        public int IdUsuarioCadastro { get; set; }
-        public virtual Usuario UsuarioCadastro { get; set; }
-        public int? IdUsuarioAlteracao { get; set; }
-        public virtual Usuario UsuarioAlteracao { get; set; }
         public double? BuyDouble { get; set; }
     }
 }

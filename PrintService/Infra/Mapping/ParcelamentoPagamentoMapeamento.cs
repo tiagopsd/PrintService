@@ -16,7 +16,8 @@ namespace PrintService.Infra.Mapping
             builder.Property(d => d.TipoFinalizador).HasColumnType("smallint").IsRequired();
             builder.Property(d => d.ValorPago).HasColumnType("float").IsRequired();
             builder.Property(d => d.DataPagamento).HasColumnType("datetime").IsRequired();
-            builder.HasOne(d => d.Pagamento).WithMany().HasForeignKey(d => d.IdPagamento);
+            builder.HasOne(d => d.Pagamento).WithMany(d => d.ParcelamentoPagamentos).HasForeignKey(d => d.IdComprovantePagamento);
+
         }
     }
 }

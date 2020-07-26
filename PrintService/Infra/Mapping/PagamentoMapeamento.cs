@@ -14,9 +14,12 @@ namespace PrintService.Infra.Mapping
             builder.ToTable("Pagamento", "dbo");
             builder.HasKey(d => d.Id);
             builder.Property(d => d.Data).HasColumnType("datetime").IsRequired();
-            builder.Property(d => d.ValorAberto).HasColumnType("float").IsRequired();
             builder.Property(d => d.ValorTotal).HasColumnType("float").IsRequired();
             builder.HasOne(d => d.Cliente).WithMany().HasForeignKey(d => d.IdCliente);
+            builder.HasMany(d => d.CashGames).WithOne(d => d.Pagamento);
+            builder.HasMany(d => d.Vendas).WithOne(d => d.Pagamento);
+            builder.HasMany(d => d.TorneiosClientes).WithOne(d => d.Pagamento);
+            builder.HasMany(d => d.ParcelamentoPagamentos).WithOne(d => d.Pagamento);
         }
     }
 }

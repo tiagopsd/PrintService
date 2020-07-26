@@ -20,15 +20,13 @@ namespace PrintService.Infra.Mapping
             builder.Property(d => d.Jantar).HasColumnType("smallint");
             builder.Property(d => d.TaxaAdm).HasColumnType("smallint");
             builder.Property(d => d.BonusBeneficente).HasColumnType("varchar").HasMaxLength(30);
-            builder.Property(d => d.DataAlteracao).HasColumnType("datetime2");
             builder.Property(d => d.DataCadastro).HasColumnType("datetime2").IsRequired();
             builder.Property(d => d.ValorPago).HasColumnType("float").IsRequired();
-            builder.HasOne(d => d.UsuarioCadastro).WithMany().HasForeignKey(d => d.IdUsuarioCadastro);
-            builder.HasOne(d => d.UsuarioAlteracao).WithMany().HasForeignKey(d => d.IdUsuarioAlteracao);
             builder.HasOne(d => d.Torneio).WithMany().HasForeignKey(d => d.IdTorneio);
             builder.HasOne(d => d.Cliente).WithMany().HasForeignKey(d => d.IdCliente);
-            builder.HasOne(d => d.Pagamento).WithMany().HasForeignKey(d => d.IdComprovantePagamento);
+            builder.HasOne(d => d.Pagamento).WithMany(d => d.TorneiosClientes).HasForeignKey(d => d.IdComprovantePagamento);
             builder.Property(d => d.BuyDouble).HasColumnType("smallint");
+            builder.Property(d => d.Situacao).HasColumnType("smallint");
         }
     }
 }

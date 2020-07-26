@@ -1,10 +1,13 @@
-﻿using System;
+﻿using PrintService.Domain.Enum;
+using PrintService.Domain.Interface;
+using PrintService.Domain.Model;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace PrintService.Domain.Enitity
 {
-    public class TorneioCliente
+    public class TorneioCliente : IEntidade<long>
     {
         public long Id { get; set; }
         public int IdTorneio { get; set; }
@@ -19,14 +22,12 @@ namespace PrintService.Domain.Enitity
         public short? TaxaAdm { get; set; }
         public short? Jantar { get; set; }
         public DateTime DataCadastro { get; set; }
-        public DateTime? DataAlteracao { get; set; }
-        public int IdUsuarioCadastro { get; set; }
-        public virtual Usuario UsuarioCadastro { get; set; }
-        public int? IdUsuarioAlteracao { get; set; }
-        public virtual Usuario UsuarioAlteracao { get; set; }
         public long? IdComprovantePagamento { get; set; }
         public virtual Pagamento Pagamento { get; set; }
         public double? ValorPago { get; set; }
         public short? BuyDouble { get; set; }
+        public SituacaoVenda Situacao { get; set; }
+
+        public IModeloImpressao ConverteModeloImpressao() => (TorneioClienteModelo)this;
     }
 }

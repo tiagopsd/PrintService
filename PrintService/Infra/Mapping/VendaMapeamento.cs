@@ -13,12 +13,12 @@ namespace PrintService.Infra.Mapping
         {
             builder.ToTable("Venda", "dbo");
             builder.HasKey(d => d.Id);
-            builder.Property(d => d.QtdItem).HasColumnType("smallint").IsRequired();
             builder.Property(d => d.DataVenda).HasColumnType("datetime2").IsRequired();
             builder.Property(d => d.Situacao).HasColumnType("smallint").IsRequired();
-            builder.HasOne(d => d.Usuario).WithMany().HasForeignKey(d => d.IdUsuario);
-            builder.HasOne(d => d.Cliente).WithMany().HasForeignKey(d => d.IdCliente);
-            builder.HasOne(d => d.Pagamento).WithMany().HasForeignKey(d => d.IdComprovantePagamento);
+            builder.Property(d => d.Valor).HasColumnType("float").IsRequired();
+            builder.HasOne(d => d.Cliente).WithMany().HasForeignKey(d => d.IdCliente).IsRequired();
+            builder.HasOne(d => d.Pagamento).WithMany(d => d.Vendas).HasForeignKey(d => d.IdComprovantePagamento);
+            builder.HasMany(d => d.PreVendas).WithOne(d => d.Venda);
         }
     }
 }

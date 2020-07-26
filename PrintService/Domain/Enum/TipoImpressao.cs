@@ -6,10 +6,9 @@ namespace PrintService.Domain.Enum
 {
     public enum TipoImpressao : short
     {
-        Bar = 0,
-        RingGame = 1,
-        Torneio = 2,
-        Pagamento = 3,
-        Comprovante = 4
+        Venda = 0,
+        CashGame = 1,
+        TorneioCliente = 2,
+        Comprovante = 3
     }
 }

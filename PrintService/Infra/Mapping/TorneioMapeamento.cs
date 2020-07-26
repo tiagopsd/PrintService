@@ -20,10 +20,6 @@ namespace PrintService.Infra.Mapping
             builder.Property(d => d.JackPot).HasColumnType("float");
             builder.Property(d => d.Jantar).HasColumnType("float");
             builder.Property(d => d.TaxaAdm).HasColumnType("float");
-            builder.Property(d => d.DataAlteracao).HasColumnType("datetime2");
-            builder.Property(d => d.DataCadastro).HasColumnType("datetime2").IsRequired();
-            builder.HasOne(d => d.UsuarioCadastro).WithMany().HasForeignKey(d => d.IdUsuarioCadastro);
-            builder.HasOne(d => d.UsuarioAlteracao).WithMany().HasForeignKey(d => d.IdUsuarioAlteracao);
             builder.Property(d => d.BuyDouble).HasColumnType("float");
         }
     }

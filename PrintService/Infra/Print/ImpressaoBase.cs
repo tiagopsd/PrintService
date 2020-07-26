@@ -1,12 +1,20 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using PrintService.Domain.Interface;
+using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.Text;
 
 namespace PrintService.Infra.Impressora
 {
-    public class ImpressaoBase
+    public abstract class ImpressaoBase : IImpressao
     {
+        protected readonly ILogger<Worker> _logger;
+        public ImpressaoBase(ILogger<Worker> logger)
+        {
+            _logger = logger;
+        }
+
         public const string Epson = "EPSON TM-T88V Receipt";
         public const string CS = "CIS PR 3000";
 
@@ -20,14 +28,14 @@ namespace PrintService.Infra.Impressora
 
             if (nomeImpressora.ToLower() == "epson")
                 printDoc.PrinterSettings.PrinterName = Epson;
-
             else if (nomeImpressora.ToLower() == "cis")
                 printDoc.PrinterSettings.PrinterName = CS;
-
             else if (!printDoc.PrinterSettings.IsValid)
                 throw new Exception("Não foi possível localizar a impressora");
 
             printDoc.Print();
         }
+
+        public abstract void Imprimir(IModeloImpressao modeloImpressao, string impressora);
     }
 }
