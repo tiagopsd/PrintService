@@ -18,11 +18,11 @@ namespace PrintService.Infra.Impressora
         {
         }
 
-        public override void Imprimir(IModeloImpressao cashGame, string nomeImpressora)
+        public override void Imprimir(IModeloImpressao modeloImpressao, string nomeImpressora)
         {
             try
             {
-                _ringGame = (RingGameModelo)cashGame;
+                _ringGame = (RingGameModelo)modeloImpressao;
                 ImprimeUmaVez(Evento, nomeImpressora);
             }
             catch (Exception erro)
