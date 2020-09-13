@@ -18,6 +18,6 @@ namespace PrintService.Domain.Enitity
         public virtual Pagamento Pagamento { get; set; }
         public long IdComprovantePagamento { get; set; }
 
-        public IModeloImpressao ConverteModeloImpressao() => (CashGameModelo)this;
+        public IModeloImpressao ConverteModeloImpressao() => (RingGameModelo)this;
     }
 }

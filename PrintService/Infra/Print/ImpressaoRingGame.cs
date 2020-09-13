@@ -10,11 +10,11 @@ using System.Text;
 
 namespace PrintService.Infra.Impressora
 {
-    public class ImpressaoCashGame : ImpressaoBase
+    public class ImpressaoRingGame : ImpressaoBase
     {
-        private CashGameModelo _cash;
+        private RingGameModelo _ringGame;
 
-        public ImpressaoCashGame(ILogger<Worker> logger) : base(logger)
+        public ImpressaoRingGame(ILogger<Worker> logger) : base(logger)
         {
         }
 
@@ -22,7 +22,7 @@ namespace PrintService.Infra.Impressora
         {
             try
             {
-                _cash = (CashGameModelo)cashGame;
+                _ringGame = (RingGameModelo)cashGame;
                 ImprimeUmaVez(Evento, nomeImpressora);
             }
             catch (Exception erro)
@@ -53,15 +53,15 @@ namespace PrintService.Infra.Impressora
             size = ev.Graphics.MeasureString("X", spaceTitleFonte);
             currentUsedHeight += size.Height;
 
-            ev.Graphics.DrawString($"Cliente: {_cash.Cliente.Nome}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
+            ev.Graphics.DrawString($"Cliente: {_ringGame.Cliente.Nome}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
             size = ev.Graphics.MeasureString("X", spaceFonte);
             currentUsedHeight += size.Height;
 
-            ev.Graphics.DrawString($"Data: {_cash.DataCadastro.ToShortDateString()}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
+            ev.Graphics.DrawString($"Data: {_ringGame.DataCadastro.ToShortDateString()}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
             size = ev.Graphics.MeasureString("X", spaceFonte);
             currentUsedHeight += size.Height;
 
-            ev.Graphics.DrawString($"Hora: {_cash.DataCadastro.ToShortTimeString()}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
+            ev.Graphics.DrawString($"Hora: {_ringGame.DataCadastro.ToShortTimeString()}", pdvFont, Brushes.Black, 10, currentUsedHeight, new StringFormat());
             size = ev.Graphics.MeasureString("X", spaceDataHoraFonte);
             currentUsedHeight += size.Height;
 
@@ -69,11 +69,11 @@ namespace PrintService.Infra.Impressora
             size = ev.Graphics.MeasureString("X", spaceDataHoraFonte);
             currentUsedHeight += size.Height;
 
-            ev.Graphics.DrawString($"Valor: {_cash.Valor:c2}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+            ev.Graphics.DrawString($"Valor: {_ringGame.Valor:c2}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
             size = ev.Graphics.MeasureString("X", spaceFonte);
             currentUsedHeight += size.Height;
 
-            ev.Graphics.DrawString($"Situação: {_cash.Situacao}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
+            ev.Graphics.DrawString($"Situação: {_ringGame.Situacao}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());
             size = ev.Graphics.MeasureString("X", spaceFonte);
             currentUsedHeight += size.Height;
         }

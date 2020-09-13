@@ -7,15 +7,15 @@ using System.Text;
 
 namespace PrintService.Domain.Model
 {
-    public class CashGameModelo : IModeloImpressao
+    public class RingGameModelo : IModeloImpressao
     {
         public SituacaoVenda Situacao { get; set; }
         public double Valor { get; set; }
         public DateTime DataCadastro { get; set; }
         public ClienteModelo Cliente { get; set; }
 
-        public static explicit operator CashGameModelo(CashGame cashGame) => 
-            cashGame == null ? null : new CashGameModelo
+        public static explicit operator RingGameModelo(CashGame cashGame) => 
+            cashGame == null ? null : new RingGameModelo
             {
                 DataCadastro = cashGame.DataCadastro,
                 Cliente = (ClienteModelo)cashGame.Cliente,

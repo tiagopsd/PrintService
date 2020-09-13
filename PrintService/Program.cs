@@ -32,7 +32,7 @@ namespace PrintService
                 {
                     services.AddHostedService<Worker>();
                     services.AddScoped<IImpressaoAplicacao, ImpressaoAplicacao>();
-                    services.AddScoped<IImpressao, ImpressaoCashGame>();
+                    services.AddScoped<IImpressao, ImpressaoRingGame>();
                     services.AddScoped<IImpressao, ImpressaoComprovante>();
                     services.AddScoped<IImpressao, ImpressaoTorneioCliente>();
                     services.AddScoped<IImpressao, ImpressaoVenda>();
