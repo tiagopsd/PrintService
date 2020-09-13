@@ -10,8 +10,6 @@ namespace PrintService.Domain.Interface
     public interface IRepository
     {
         T GetById<T>(params object[] id) where T : class;
-        DbSet<T> Inject<T>() where T : class;
-        void Dispose();
         T FirstOrDefault<T>(Expression<Func<T, bool>> predicate) where T : class;
         List<T> ToList<T>(Expression<Func<T, bool>> predicate) where T: class;
     }

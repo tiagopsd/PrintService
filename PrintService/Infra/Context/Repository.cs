@@ -13,7 +13,7 @@ namespace PrintService.Infra
 {
     public class Repository : IRepository
     {
-        private IContext _context;
+        private readonly IContext _context;
         public Repository(IContext context)
         {
             _context = context;
@@ -27,7 +27,7 @@ namespace PrintService.Infra
             }
             catch
             {
-                return default;
+                throw;
             }
         }
 
@@ -39,24 +39,8 @@ namespace PrintService.Infra
             }
             catch
             {
-                return default;
+                throw;
             }
-        }
-
-        public DbSet<T> Inject<T>() where T : class
-        {
-            try
-            {
-                return _context.Set<T>();
-            }
-            catch
-            {
-                return default;
-            }
-        }
-
-        public void Dispose()
-        {
         }
 
         public List<T> ToList<T>(Expression<Func<T, bool>> predicate) where T : class
@@ -67,7 +51,7 @@ namespace PrintService.Infra
             }
             catch
             {
-                return default;
+                throw;
             }
         }
 
@@ -84,6 +68,7 @@ namespace PrintService.Infra
             }
             catch
             {
+                throw;
             }
         }
     }

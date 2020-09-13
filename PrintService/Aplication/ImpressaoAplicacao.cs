@@ -76,9 +76,14 @@ namespace PrintService.Aplication
         private void Imprimir(Impressao impressao, ImplementacaoImpressao implementacao, IModeloImpressao modeloImpressao)
         {
             _logger.LogInformation($"Realizando impressão {impressao.TipoImpressao}");
-            _impressoes.ElementAt(implementacao.Valor()).Imprimir(modeloImpressao, impressao.NomeImpressora);
+
+            _impressoes.ElementAt(implementacao.Valor())
+                .Imprimir(modeloImpressao, impressao.NomeImpressora);
+
             _logger.LogInformation($"Impressão {impressao.TipoImpressao} realizada com sucesso!");
+
             impressao.SituacaoImpressao = SituacaoImpressao.Impresso;
+
             _context.SaveChanges();
         }
     }
