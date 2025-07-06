@@ -1,46 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PrintService;
 using PrintService.Aplication;
 using PrintService.Domain.Interface;
 using PrintService.Infra;
 using PrintService.Infra.Impressora;
 using PrintService.Infra.Utils;
 
-namespace PrintService
+await Host.CreateDefaultBuilder(args)
+.UseWindowsService()
+.ConfigureServices((hostContext, services) =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args)
-            .Build()
-            .Run();
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddHostedService<Worker>();
-                    services.AddScoped<IImpressaoAplicacao, ImpressaoAplicacao>();
-                    services.AddScoped<IImpressao, ImpressaoRingGame>();
-                    services.AddScoped<IImpressao, ImpressaoComprovante>();
-                    services.AddScoped<IImpressao, ImpressaoTorneioCliente>();
-                    services.AddScoped<IImpressao, ImpressaoVenda>();
-                    services.AddScoped<IRepository, Repository>();
-                    services
-                    .AddEntityFrameworkSqlServer()
-                    .AddEntityFrameworkProxies()
-                    .AddDbContext<IContext, Context>(ServiceLifetime.Scoped);
-                });
-    }
-}
+    hostContext.Configuration.Configure(hostContext.HostingEnvironment.IsProduction());
+    services.AddScoped<IImpressaoAplicacao, ImpressaoAplicacao>();
+    services.AddScoped<IImpressao, ImpressaoRingGame>();
+    services.AddScoped<IImpressao, ImpressaoComprovante>();
+    services.AddScoped<IImpressao, ImpressaoTorneioCliente>();
+    services.AddScoped<IImpressao, ImpressaoVenda>();
+    services.AddScoped<IRepository, Repository>();
+    services.AddDbContext<IContext, Context>(ServiceLifetime.Scoped);
+    services.AddHostedService<Worker>();
+})
+.Build()
+.RunAsync();

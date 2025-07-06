@@ -3,9 +3,6 @@ using PrintService.Domain.Enum;
 using PrintService.Domain.Interface;
 using PrintService.Infra.Utils;
 using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace PrintService.Domain.Model
 {
@@ -21,10 +18,10 @@ namespace PrintService.Domain.Model
         public short TaxaAdm { get; set; }
         public string BonusBeneficente { get; set; }
         public short Jantar { get; set; }
-        public double ValorTotal { get; set; }
+        public decimal ValorTotal { get; set; }
         public ClienteModelo Cliente { get; set; }
         public SituacaoVenda Situacao { get; set; }
-        public double ValorPago { get; set; }
+        public decimal ValorPago { get; set; }
 
         public static explicit operator TorneioClienteModelo(TorneioCliente torneioCliente) =>
             torneioCliente == null ? null : new TorneioClienteModelo
@@ -45,7 +42,7 @@ namespace PrintService.Domain.Model
                 ValorTotal = CalculaValorTotal(torneioCliente)
             };
 
-        public static double CalculaValorTotal(TorneioCliente torneioCliente) =>
+        public static decimal CalculaValorTotal(TorneioCliente torneioCliente) =>
             (torneioCliente.Torneio.Addon * torneioCliente?.Addon ?? 0) +
             (torneioCliente.Torneio.BuyDouble * torneioCliente?.BuyDouble ?? 0) +
             (torneioCliente.Torneio.BuyIn * torneioCliente?.BuyIn ?? 0) +
@@ -53,6 +50,6 @@ namespace PrintService.Domain.Model
             (torneioCliente.Torneio.Jantar * torneioCliente?.Jantar ?? 0) +
             (torneioCliente.Torneio.ReBuy * torneioCliente?.ReBuy ?? 0) +
             (torneioCliente.Torneio.TaxaAdm * torneioCliente?.TaxaAdm ?? 0) +
-            (torneioCliente.BonusBeneficente.TemValor() && torneioCliente.BonusBeneficente.Contains("5") ? 5 : 0);
+            (torneioCliente.BonusBeneficente.HasValue() && torneioCliente.BonusBeneficente.Contains("5") ? 5 : 0);
     }
 }

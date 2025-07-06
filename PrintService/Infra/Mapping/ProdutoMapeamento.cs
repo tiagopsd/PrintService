@@ -11,10 +11,13 @@ namespace PrintService.Infra.Mapping
     {
         public void Configure(EntityTypeBuilder<Produto> builder)
         {
-            builder.ToTable("Produto", "dbo");
+            builder.ToTable("produto", "public");
+
             builder.HasKey(d => d.Id);
-            builder.Property(d => d.Nome).HasColumnType("varchar").HasMaxLength(40).IsRequired();
-            builder.Property(d => d.Valor).HasColumnType("float").IsRequired();
+            builder.Property(d => d.Id).HasColumnName("id").HasColumnType("int8").IsRequired();
+
+            builder.Property(d => d.Nome).HasColumnName("nome").HasColumnType("varchar").HasMaxLength(80).IsRequired();
+            builder.Property(d => d.Valor).HasColumnName("valor").HasColumnType("numeric").HasPrecision(12, 2).IsRequired();
         }
     }
 }

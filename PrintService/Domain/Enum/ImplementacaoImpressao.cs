@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
-
-namespace PrintService.Domain.Enum
+﻿namespace PrintService.Domain.Enum
 {
-    public enum ImplementacaoImpressao : int
+    public enum ImplementacaoImpressao : short
     {
         ImpressaoCashGame = 0,
         ImpressaoComprovante = 1,

@@ -1,8 +1,5 @@
 ﻿using PrintService.Domain.Enum;
 using PrintService.Domain.Interface;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PrintService.Domain
 {
@@ -13,10 +10,5 @@ namespace PrintService.Domain
         public TipoImpressao TipoImpressao { get; set; }
         public long IdObjetoImpressao { get; set; }
         public SituacaoImpressao SituacaoImpressao { get; set; }
-
-        public IModeloImpressao ConverteModeloImpressao()
-        {
-            return null;
-        }
     }
 }

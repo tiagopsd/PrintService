@@ -1,16 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Castle.Core.Configuration;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using PrintService.Aplication;
 using PrintService.Domain.Interface;
-using PrintService.Infra;
 using PrintService.Infra.Utils;
 
 namespace PrintService
@@ -31,14 +25,13 @@ namespace PrintService
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Serviço rodando às: {time}", DateTimeOffset.Now);
-                
-                _serviceProvider
+
+                await _serviceProvider
                     .CreateScope()
                     .ServiceProvider.GetService<IImpressaoAplicacao>()
                     .Processar();
 
-                var tempo = Configuracao.ObterConfiguracao<int>("Tempo");
-                await Task.Delay(tempo, stoppingToken);
+                await Task.Delay(AppSettings.LoopDelay, stoppingToken);
             }
         }
     }

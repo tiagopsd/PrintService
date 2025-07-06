@@ -1,17 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
-using PrintService.Domain.Enum;
+﻿using PrintService.Domain.Enum;
 using PrintService.Domain.Interface;
 using PrintService.Domain.Model;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace PrintService.Domain.Enitity
 {
-    public class Venda : IEntidade<long>
+    public class Venda : IEntidade<long>, IConversorModeloImpressao
     {
         public long Id { get; set; }
-        public double Valor { get; set; }
+        public decimal Valor { get; set; }
         public virtual Cliente Cliente { get; set; }
         public long IdCliente { get; set; }
         public DateTime DataVenda { get; set; }

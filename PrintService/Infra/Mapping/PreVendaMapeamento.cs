@@ -11,9 +11,16 @@ namespace PrintService.Infra.Mapping
     {
         public void Configure(EntityTypeBuilder<PreVenda> builder)
         {
-            builder.ToTable("PreVenda", "dbo");
+            builder.ToTable("prevenda", "public");
+
             builder.HasKey(d => d.Id);
-            builder.Property(d => d.Quantidade).HasColumnType("smallint").IsRequired();
+            builder.Property(d => d.Id).HasColumnName("id").HasColumnType("int8").IsRequired();
+
+            builder.Property(d => d.Quantidade).HasColumnName("quantidade").HasColumnType("int2").IsRequired();
+
+            builder.Property(d => d.IdProduto).HasColumnName("idproduto").HasColumnType("int8");
+            builder.Property(d => d.IdVenda).HasColumnName("idvenda").HasColumnType("int8");
+
             builder.HasOne(d => d.Produto).WithMany().HasForeignKey(d => d.IdProduto);
             builder.HasOne(d => d.Venda).WithMany(d => d.PreVendas).HasForeignKey(d => d.IdVenda);
         }

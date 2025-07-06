@@ -2,15 +2,13 @@
 using PrintService.Domain.Interface;
 using PrintService.Domain.Model;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PrintService.Domain.Enitity
 {
-    public class TorneioCliente : IEntidade<long>
+    public class TorneioCliente : IEntidade<long>, IConversorModeloImpressao
     {
         public long Id { get; set; }
-        public int IdTorneio { get; set; }
+        public long IdTorneio { get; set; }
         public virtual Torneio Torneio { get; set; }
         public long IdCliente { get; set; }
         public virtual Cliente Cliente { get; set; }
@@ -24,7 +22,7 @@ namespace PrintService.Domain.Enitity
         public DateTime DataCadastro { get; set; }
         public long? IdComprovantePagamento { get; set; }
         public virtual Pagamento Pagamento { get; set; }
-        public double? ValorPago { get; set; }
+        public decimal? ValorPago { get; set; }
         public short? BuyDouble { get; set; }
         public SituacaoVenda Situacao { get; set; }
 

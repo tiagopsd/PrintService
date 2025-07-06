@@ -1,19 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
-using PrintService.Domain.Enitity;
 using PrintService.Domain.Interface;
 using PrintService.Domain.Model;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.Text;
 
 namespace PrintService.Infra.Impressora
 {
     public class ImpressaoRingGame : ImpressaoBase
     {
         private RingGameModelo _ringGame;
-
         public ImpressaoRingGame(ILogger<Worker> logger) : base(logger)
         {
         }

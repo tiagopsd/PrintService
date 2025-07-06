@@ -4,7 +4,6 @@ using PrintService.Domain.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace PrintService.Domain.Model
 {
@@ -12,7 +11,7 @@ namespace PrintService.Domain.Model
     {
         public List<PreVendaModelo> PreVendas { get; set; }
         public DateTime DataVenda { get; set; }
-        public double Valor { get; set; }
+        public decimal Valor { get; set; }
         public ClienteModelo Cliente { get; set; }
         public SituacaoVenda Situacao { get; set; }
 

@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using PrintService.Domain.Interface;
 using System;
-using System.Collections.Generic;
 using System.Drawing.Printing;
-using System.Text;
 
 namespace PrintService.Infra.Impressora
 {
@@ -20,7 +18,7 @@ namespace PrintService.Infra.Impressora
 
         public void ImprimeUmaVez(PrintPageEventHandler evento, string nomeImpressora)
         {
-            PrintDocument printDoc = new PrintDocument
+            var printDoc = new PrintDocument
             {
                 DocumentName = "Cupom"
             };

@@ -1,20 +1,16 @@
 ﻿using Microsoft.Extensions.Logging;
-using PrintService.Domain.Enitity;
 using PrintService.Domain.Interface;
 using PrintService.Domain.Model;
 using PrintService.Infra.Utils;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.Text;
 
 namespace PrintService.Infra.Impressora
 {
     public class ImpressaoTorneioCliente : ImpressaoBase
     {
         private TorneioClienteModelo _torneioCliente;
-
         public ImpressaoTorneioCliente(ILogger<Worker> logger) : base(logger)
         {
         }
@@ -112,7 +108,7 @@ namespace PrintService.Infra.Impressora
                 currentUsedHeight += size.Height;
             }
 
-            if (_torneioCliente.BonusBeneficente.TemValor())
+            if (_torneioCliente.BonusBeneficente.HasValue())
             {
                 var bonus = _torneioCliente.BonusBeneficente.Contains("5") ? $"R$ {_torneioCliente.BonusBeneficente}" : _torneioCliente.BonusBeneficente;
                 ev.Graphics.DrawString($"BonusBeneficente: {bonus}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());

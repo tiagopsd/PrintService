@@ -1,10 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using PrintService.Domain.Interface;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PrintService.Aplication
 {

@@ -1,18 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using PrintService.Domain;
 using PrintService.Domain.Enitity;
 using PrintService.Domain.Enum;
 using PrintService.Domain.Interface;
-using PrintService.Domain.Model;
-using PrintService.Infra;
 using PrintService.Infra.Utils;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace PrintService.Aplication
 {
@@ -27,64 +21,62 @@ namespace PrintService.Aplication
         {
         }
 
-        public void Processar()
+        public async Task Processar()
         {
-            var impressoes = ObterImpressaoPendente();
+            var impressoes = await ObterImpressaoPendente();
 
-            impressoes.ForEach(d =>
-            {
-                RealizaImpressao(d);
-            });
+            foreach (var impressao in impressoes)
+                await RealizaImpressao(impressao);
         }
 
-        public void RealizaImpressao(Impressao impressao)
+        public async Task RealizaImpressao(Impressao impressao)
         {
             switch (impressao.TipoImpressao)
             {
                 case TipoImpressao.Venda:
                     {
-                        var modeloImpressao = _repository.GetById<Venda>(impressao.IdObjetoImpressao).ConverteModeloImpressao();
-                        Imprimir(impressao, ImplementacaoImpressao.ImpressaoVenda, modeloImpressao);
+                        var venda = await _repository.GetById<Venda>(impressao.IdObjetoImpressao);
+                        await Imprimir(impressao, ImplementacaoImpressao.ImpressaoVenda, venda.ConverteModeloImpressao());
                     }
                     break;
                 case TipoImpressao.CashGame:
                     {
-                        var modeloImpressao = _repository.GetById<CashGame>(impressao.IdObjetoImpressao).ConverteModeloImpressao();
-                        Imprimir(impressao, ImplementacaoImpressao.ImpressaoCashGame, modeloImpressao);
+                        var cashGame = await _repository.GetById<CashGame>(impressao.IdObjetoImpressao);
+                        await Imprimir(impressao, ImplementacaoImpressao.ImpressaoCashGame, cashGame.ConverteModeloImpressao());
                     }
                     break;
                 case TipoImpressao.TorneioCliente:
                     {
-                        var modeloImpressao = _repository.GetById<TorneioCliente>(impressao.IdObjetoImpressao).ConverteModeloImpressao();
-                        Imprimir(impressao, ImplementacaoImpressao.ImpressaoTorneioCliente, modeloImpressao);
+                        var torneioCliente = await _repository.GetById<TorneioCliente>(impressao.IdObjetoImpressao);
+                        await Imprimir(impressao, ImplementacaoImpressao.ImpressaoTorneioCliente, torneioCliente.ConverteModeloImpressao());
                     }
                     break;
                 case TipoImpressao.Comprovante:
                     {
-                        var modeloImpressao = _repository.GetById<Pagamento>(impressao.IdObjetoImpressao).ConverteModeloImpressao();
-                        Imprimir(impressao, ImplementacaoImpressao.ImpressaoComprovante, modeloImpressao);
+                        var pagamento = await _repository.GetById<Pagamento>(impressao.IdObjetoImpressao);
+                        await Imprimir(impressao, ImplementacaoImpressao.ImpressaoComprovante, pagamento.ConverteModeloImpressao());
                     }
                     break;
             }
         }
 
-        private List<Impressao> ObterImpressaoPendente()
+        private async Task<List<Impressao>> ObterImpressaoPendente()
         {
-            return _repository.ToList<Impressao>(d => d.SituacaoImpressao != SituacaoImpressao.Impresso);
+            return await _repository.ToList<Impressao>(d => d.SituacaoImpressao != SituacaoImpressao.Impresso);
         }
 
-        private void Imprimir(Impressao impressao, ImplementacaoImpressao implementacao, IModeloImpressao modeloImpressao)
+        private async Task Imprimir(Impressao impressao, ImplementacaoImpressao implementacao, IModeloImpressao modeloImpressao)
         {
             _logger.LogInformation($"Realizando impressão {impressao.TipoImpressao}");
 
-            _impressoes.ElementAt(implementacao.Valor())
+            _impressoes.ElementAt(implementacao.Value())
                 .Imprimir(modeloImpressao, impressao.NomeImpressora);
 
             _logger.LogInformation($"Impressão {impressao.TipoImpressao} realizada com sucesso!");
 
             impressao.SituacaoImpressao = SituacaoImpressao.Impresso;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

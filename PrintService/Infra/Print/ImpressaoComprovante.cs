@@ -3,18 +3,15 @@ using PrintService.Domain.Interface;
 using PrintService.Domain.Model;
 using PrintService.Infra.Utils;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Linq;
-using System.Text;
 
 namespace PrintService.Infra.Impressora
 {
     public class ImpressaoComprovante : ImpressaoBase
     {
         private ComprovanteModelo comprovanteModel;
-
         public ImpressaoComprovante(ILogger<Worker> logger) : base(logger)
         {
         }
@@ -174,7 +171,7 @@ namespace PrintService.Infra.Impressora
                         currentUsedHeight += size.Height;
                     }
 
-                    if (torneioCliente.BonusBeneficente.TemValor())
+                    if (torneioCliente.BonusBeneficente.HasValue())
                     {
                         var bonusFormato = torneioCliente.BonusBeneficente.Contains("5") ? "R$ " + torneioCliente.BonusBeneficente : "Alimento";
                         ev.Graphics.DrawString($"Bônus Beneficente: {bonusFormato}", pdvFont, Brushes.Black, 15, currentUsedHeight, new StringFormat());

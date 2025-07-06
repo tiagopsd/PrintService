@@ -11,11 +11,16 @@ namespace PrintService.Infra.Mapping
     {
         public void Configure(EntityTypeBuilder<ParcelamentoPagamento> builder)
         {
-            builder.ToTable("ParcelamentoPagamento", "dbo");
+            builder.ToTable("parcelamentopagamento", "public");
+
             builder.HasKey(d => d.Id);
-            builder.Property(d => d.TipoFinalizador).HasColumnType("smallint").IsRequired();
-            builder.Property(d => d.ValorPago).HasColumnType("float").IsRequired();
-            builder.Property(d => d.DataPagamento).HasColumnType("datetime").IsRequired();
+            builder.Property(d => d.Id).HasColumnName("id").HasColumnType("int8").IsRequired();
+
+            builder.Property(d => d.TipoFinalizador).HasColumnName("tipofinalizador").HasColumnType("int2").IsRequired();
+            builder.Property(d => d.ValorPago).HasColumnType("numeric").HasPrecision(12, 2).IsRequired();
+            builder.Property(d => d.DataPagamento).HasColumnName("datapagamento").HasColumnType("timestamp").IsRequired();
+
+            builder.Property(d => d.IdComprovantePagamento).HasColumnName("idcomprovantepagamento").HasColumnType("int8");
             builder.HasOne(d => d.Pagamento).WithMany(d => d.ParcelamentoPagamentos).HasForeignKey(d => d.IdComprovantePagamento);
 
         }

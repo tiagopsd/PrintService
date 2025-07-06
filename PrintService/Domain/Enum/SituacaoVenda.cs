@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PrintService.Domain.Enum
+﻿namespace PrintService.Domain.Enum
 {
     public enum SituacaoVenda : short
     {

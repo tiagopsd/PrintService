@@ -1,14 +1,10 @@
-﻿using PrintService.Domain.Enum;
-using PrintService.Domain.Interface;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using PrintService.Domain.Interface;
 
 namespace PrintService.Domain.Enitity
 {
-    public class Usuario : IEntidade
+    public class Usuario : IEntidade<long>
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Nome { get; set; }
         public string Login { get; set; }
         public string Senha { get; set; }

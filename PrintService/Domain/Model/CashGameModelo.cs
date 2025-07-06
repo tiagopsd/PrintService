@@ -2,15 +2,13 @@
 using PrintService.Domain.Enum;
 using PrintService.Domain.Interface;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PrintService.Domain.Model
 {
     public class RingGameModelo : IModeloImpressao
     {
         public SituacaoVenda Situacao { get; set; }
-        public double Valor { get; set; }
+        public decimal Valor { get; set; }
         public DateTime DataCadastro { get; set; }
         public ClienteModelo Cliente { get; set; }
 

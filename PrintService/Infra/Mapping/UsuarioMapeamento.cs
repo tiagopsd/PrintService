@@ -11,11 +11,14 @@ namespace PrintService.Infra.Mapping
     {
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
-            builder.ToTable("Usuario", "dbo");
+            builder.ToTable("usuario", "public");
+
             builder.HasKey(d => d.Id);
-            builder.Property(d => d.Login).HasColumnType("varchar").HasMaxLength(10).IsRequired();
-            builder.Property(d => d.Nome).HasColumnType("varchar").HasMaxLength(30).IsRequired();
-            builder.Property(d => d.Senha).HasColumnType("varchar").HasMaxLength(10).IsRequired();
+            builder.Property(d => d.Id).HasColumnName("id").HasColumnType("int8").IsRequired();
+
+            builder.Property(d => d.Login).HasColumnName("login").HasColumnType("varchar").HasMaxLength(10).IsRequired();
+            builder.Property(d => d.Nome).HasColumnName("nome").HasColumnType("varchar").HasMaxLength(30).IsRequired();
+            builder.Property(d => d.Senha).HasColumnName("senha").HasColumnType("varchar").HasMaxLength(10).IsRequired();
         }
     }
 }

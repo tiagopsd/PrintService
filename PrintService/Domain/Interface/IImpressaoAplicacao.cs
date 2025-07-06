@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Threading.Tasks;
 
 namespace PrintService.Domain.Interface
 {
     public interface IImpressaoAplicacao
     {
-        void Processar();
+        Task Processar();
     }
 }
